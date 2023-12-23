@@ -1,11 +1,19 @@
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
+
 
 // express app
 const app = express();
 
+// Connect to MongoDB
+const dbURI = 'mongodb+srv://richardcodez:lcr856040@cluster0.6xln7ks.mongodb.net/node-tuts?retryWrites=true&w=majority';
+mongoose.connect(dbURI)
+    .then((result) => { app.listen(3000) })
+    .catch((err) => {console.log(err)});
+
 // Register view engine
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs')
 
 
 //  LISTENING TO REQUESTS
@@ -13,7 +21,6 @@ app.set('view engine', 'ejs');
 // listen for requests
 // only store in a constant if you want to use it later
 // for things like web socket
-app.listen(3000);
 
 // Middleware and STatic files = public files = css, images
 app.use(express.static('public'));
