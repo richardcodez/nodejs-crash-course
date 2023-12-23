@@ -1,5 +1,5 @@
 const express = require('express');
-//const morgan = require('morgan');
+const morgan = require('morgan');
 
 // express app
 const app = express();
@@ -10,18 +10,14 @@ app.set('view engine', 'ejs');
 
 //  LISTENING TO REQUESTS
 
-app.use( (req, res, next) => {
-    console.log('new request made:');
-    console.log('host: ', req.hostname);
-    console.log('path:', req.path);
-    console.log('method', req.method);
-    next();
-});
+// listen for requests
+// only store in a constant if you want to use it later
+// for things like web socket
+app.listen(3000);
 
-app.use( (req, res, next) => {
-    console.log('In the next middleware:');
-    next();
-});
+// Middleware and STatic files = public files = css, images
+app.use(express.static('public'));
+app.use(morgan('dev'));
 
 // home page
 app.get('/', (req, res) => {
@@ -52,7 +48,3 @@ app.use((req, res) => {
     res.status(404).render('404', { title: '404' });
 });
 
-// listen for requests
-// only store in a constant if you want to use it later
-// for things like web socket
-app.listen(3000);
