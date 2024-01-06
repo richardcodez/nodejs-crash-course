@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const Blog = require('./models/blog.js');
+const blogRoutes = require('./routes/blogRoutes');
 
 
 // express app
@@ -43,56 +43,9 @@ app.get('/about', (req, res) => {
 
 });
 
-// Blog Routes
-app.get('/blogs', (req, res) => {
-    Blog.find().sort({createdAt: -1})
-        .then((result) => {
-            res.render('index', { title: 'All Blogs', blogs: result })
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-});
-
-// handling POST REQUEST under create blog form
-app.post('/blogs', (req, res) => {
-    // receives request from /blogs
-    const blog = new Blog(req.body);
-
-    blog.save()
-        .then( (result) => {
-            res.redirect('/blogs');
-        })
-        .catch( (err) => {
-            console.log(err);
-        });
-});
-
-app.get('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-    Blog.findById(id)
-        .then( (result) => {
-            res.render('details', { blog: result, title: 'Blog Details' });
-        })
-        .catch( (err) => {
-            console.log(err);
-        })
-});
-
-app.delete('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-
-    Blog.findByIdAndDelete(id)
-        .then(result => {
-            res.json({ redirect: '/blogs' })
-        })
-        .catch((err)=>console.log(err));
-})
-
-// create blog
-app.get('/blogs/create', (req, res) => {
-    res.render('create', { title: 'Create a New Blog' });
-});
+// Blog routes
+// integrating MVC structure, adding the Countroller folder routes
+app.use('/blogs', blogRoutes);
 
 // 404 page: it has to be the last function => at the bottom
 app.use((req, res) => {
